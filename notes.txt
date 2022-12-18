@@ -1,0 +1,85 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    notes.txt                                          :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: fgabri <fgabri@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/12/09 08:52:43 by fgabri            #+#    #+#              #
+#    Updated: 2022/12/09 10:00:04 by fgabri           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+___When to use malloc and calloc inc :
+Use calloc() when going to leave parts of the data unitialized and it would be benifical to have the unset parts zeroed. In this case of Buffer, since we are unsure about the size of the buffer,while compiling, we might set a size less than the buffer's positon where it's equal to '\n'.
+Also, callorc protect integer overflow:
+https://www.hackerearth.com/practice/notes/malloc-vs-calloc/#:~:text=Use%20malloc()%20if%20you,have%20the%20unset%20parts%20zeroed.
+
+
+___ssize_t read(int fd, void *buf, size_t nbyte):
+void *buf: the buffer in which the read data should be saved and kept.
+Before reading a file, we must open it using open() function:
+
+___int open(const char *fd, int oflags, mode_t mode):
+the filde descriptor returned is always the smallest int >= 0. If a negative value is returned, then there was an error opening the file.int filedesc = open("testfile.txt", O_WRONLY | O_APPEND);
+
+___read(fd, 0, 0)
+It's important to set this condition in the code, in case of negative values, for exemple if the file is closes before this immediately this will be equal to -1.
+fore.g:
+int main()
+{
+	int	p;
+	char buf[100];
+	int fd = open("text.txt", O_RDONLY);
+	close(fd);
+	p = read(fd,NULL,0);
+	printf("%d\n", p); //-1'
+	return (0);
+}
+Remember that read == -1, if it reaches the end of file (eof)
+
+__static variable,
+Initialising a static var (buffer) to  preserve their u in data segment
+ after calling the function in main().to have the files'lines.
+Note that static variables are declared ad 
+int main()
+{
+	int	p;
+	char buf[100] = "my name is fatima";
+	int fd = open("text.txt", O_RDONLY);
+	p = 1;
+	while(p > 0)
+	{
+		p = read(fd, buf, 5);
+		buf[p] = '\0';
+		if (p == -1)
+		{
+			printf("the eof");
+			break;
+		}
+		printf("the %d ---> %s\n", p, buf);
+	}
+	close(fd);
+	printf("the out of loop %s\n", buf);
+	return (0);
+}
+Note that when doing the:
+read(fd, but, 5) it doesn't create any pb while entering the loop each time, since we set '\0' at the pth position
+to delete the chars after the bug, but also, remember that read(fd,buf,5) copy the first
+p ti the bus, so it doesn't care about its values. we didn't have any conflicts.
+
+
+___BONUS reading multiple files:
+OPEN_MAX is the constant that defines the maximum number of open files allowed for a single program.
+For it, we use limits.h header.
+l
+kflkcl
+
+
+
+leaks -atExit -- ./a.out
+gcc -D defines a macro to be used by the preprocessor.
+
+
+
+
